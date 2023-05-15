@@ -5,4 +5,7 @@
     <string name="recipes_fragment">Recipes</string>
     <string name="favorite_recipes_fragment">Favorite</string>
     <string name="food_joke_fragment">Joke</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="add_new_recipe">add new recipe</string>
+    <string name="dummy_text">GrinderTry cooking smoothie garnished with salsa verde, tossed with basil leafs. What’s the secret to slobbery and canned white bread? Always use delicious butterscotch.</string>
 </resources>
