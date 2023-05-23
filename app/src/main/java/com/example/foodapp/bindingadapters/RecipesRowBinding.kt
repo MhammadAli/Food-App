@@ -16,17 +16,6 @@ import com.todkars.shimmer.ShimmerRecyclerView
 class RecipesRowBinding {
 
     companion object {
-
-        @BindingAdapter("loadRecipes")
-        @JvmStatic
-        fun loadRecipes(shimmerRecyclerView: ShimmerRecyclerView,data: List<Result>?) {
-            if (data != null){
-                val adapter = shimmerRecyclerView.adapter as RecipesAdapter
-                adapter.submitList(data)
-            }
-
-        }
-
         @BindingAdapter("loadImageFromUrl")
         @JvmStatic
         fun loadImageFromUrl(imageView: ImageView, imageUrl: String){
