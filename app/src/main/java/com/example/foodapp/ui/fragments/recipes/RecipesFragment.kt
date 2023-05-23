@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodapp.viewmodels.MainViewModel
 import com.example.foodapp.adapters.RecipesAdapter
@@ -16,12 +17,14 @@ import com.example.foodapp.util.NetworkResult
 import com.example.foodapp.viewmodels.RecipesViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
     private lateinit var binding: FragmentRecipesBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recipesViewModel: RecipesViewModel
+    private val TAG = "RecipesFragment"
 
     private val adapter by lazy { RecipesAdapter() }
 
@@ -43,13 +46,37 @@ class RecipesFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
         setupRecyclerView()
-        requestApiData()
+        readDatabase()
 
 
         return binding.root
     }
 
+    private fun setupRecyclerView() {
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+        showShimmerEffect()
+    }
+
+    private fun readDatabase() {
+
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+                if (database.isNotEmpty()) {
+                    Log.d(TAG, "readDatabase called")
+                    adapter.submitList(database[0].foodRecipe.results)
+                    hideShimmerEffect()
+                } else {
+                    requestApiData()
+                }
+            }
+        }
+    }
+
     private fun requestApiData() {
+        Log.d(TAG, "requestApiData called")
         mainViewModel.getRecipes(recipesViewModel.applyQueries())
         mainViewModel.recipesResponse.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -66,6 +93,7 @@ class RecipesFragment : Fragment() {
 
                 is NetworkResult.Error -> {
                     hideShimmerEffect()
+                    loadFromCache()
                     Snackbar.make(binding.root, response.message.toString(), Snackbar.LENGTH_SHORT)
                         .show()
                 }
@@ -77,13 +105,12 @@ class RecipesFragment : Fragment() {
         }
     }
 
-
-    private fun setupRecyclerView() {
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
-
-        showShimmerEffect()
+    private fun loadFromCache() = lifecycleScope.launch {
+        mainViewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                adapter.submitList(database[0].foodRecipe.results)
+            }
+        }
     }
 
     private fun showShimmerEffect() = binding.recyclerView.showShimmer()
