@@ -14,6 +14,7 @@ import com.example.foodapp.adapters.RecipesAdapter
 import com.example.foodapp.databinding.FragmentRecipesBinding
 import com.example.foodapp.util.Constants.API_KEY
 import com.example.foodapp.util.NetworkResult
+import com.example.foodapp.util.observeOnce
 import com.example.foodapp.viewmodels.RecipesViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +64,7 @@ class RecipesFragment : Fragment() {
     private fun readDatabase() {
 
         lifecycleScope.launch {
-            mainViewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            mainViewModel.readRecipes.observeOnce(viewLifecycleOwner) { database ->
                 if (database.isNotEmpty()) {
                     Log.d(TAG, "readDatabase called")
                     adapter.submitList(database[0].foodRecipe.results)
