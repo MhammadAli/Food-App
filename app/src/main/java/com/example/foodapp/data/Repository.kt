@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class Repository @Inject constructor(
-    remoteDataSource: RemoteDataSource
+    remoteDataSource: RemoteDataSource,
     localDataSource: LocalDataSource
 ) {
 
