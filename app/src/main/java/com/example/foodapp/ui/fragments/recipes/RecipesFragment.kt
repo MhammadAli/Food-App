@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.foodapp.R
 import com.example.foodapp.viewmodels.MainViewModel
 import com.example.foodapp.adapters.RecipesAdapter
 import com.example.foodapp.databinding.FragmentRecipesBinding
-import com.example.foodapp.util.Constants.API_KEY
 import com.example.foodapp.util.NetworkResult
 import com.example.foodapp.util.observeOnce
 import com.example.foodapp.viewmodels.RecipesViewModel
@@ -48,6 +49,9 @@ class RecipesFragment : Fragment() {
         setupRecyclerView()
         readDatabase()
 
+        binding.recipesFab.setOnClickListener{
+            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+        }
 
         return binding.root
     }
