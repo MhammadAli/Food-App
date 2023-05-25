@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.navigation.fragment.findNavController
 import com.example.foodapp.R
 import com.example.foodapp.databinding.RecipesBottomSheetBinding
 import com.example.foodapp.util.Constants.DEFAULT_DIET_TYPE
@@ -73,6 +74,10 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
                 dietTypeChip,
                 dietTypeChipId
             )
+
+            val action =
+                RecipesBottomSheetDirections.actionRecipesBottomSheetToRecipesFragment(true)
+            findNavController().navigate(action)
         }
 
         return binding.root
@@ -82,7 +87,7 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
         try {
             chipGroup.findViewById<Chip>(chipId).isChecked = true
         } catch (e: Exception) {
-            Log.e("RecipesBottomSheet", e.message.toString() )
+            Log.e("RecipesBottomSheet", e.message.toString())
         }
 
     }

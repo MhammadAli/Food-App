@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodapp.R
 import com.example.foodapp.viewmodels.MainViewModel
@@ -25,6 +26,8 @@ import kotlinx.coroutines.launch
 class RecipesFragment : Fragment() {
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
+
+    private val args by navArgs<RecipesFragmentArgs>()
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recipesViewModel: RecipesViewModel
     private val TAG = "RecipesFragment"
@@ -49,7 +52,7 @@ class RecipesFragment : Fragment() {
         setupRecyclerView()
         readDatabase()
 
-        binding.recipesFab.setOnClickListener{
+        binding.recipesFab.setOnClickListener {
             findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
         }
 
@@ -68,13 +71,13 @@ class RecipesFragment : Fragment() {
 
         lifecycleScope.launch {
             mainViewModel.readRecipes.observeOnce(viewLifecycleOwner) { database ->
-                if (database.isNotEmpty()) {
+                if (database.isNotEmpty() && !args.backFromBottomSheet) {
                     Log.d(TAG, "readDatabase called")
                     adapter.submitList(database[0].foodRecipe.results)
                     hideShimmerEffect()
                 } else {
-                    requestApiData()
-                }
+                requestApiData()
+            }
             }
         }
     }
