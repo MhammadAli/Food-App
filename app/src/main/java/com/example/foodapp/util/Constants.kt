@@ -26,4 +26,5 @@ object Constants {
     const val PREFERENCES_DIET_TYPE = "dietType"
     const val PREFERENCES_DIET_TYPE_ID = "dietTypeId"
     const val PREFERENCES_NAME = "foody preferences"
+    const val PREFERENCE_BACK_ONLINE = "backOnline"
 }
