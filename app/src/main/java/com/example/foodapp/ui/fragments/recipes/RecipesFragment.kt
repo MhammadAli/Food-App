@@ -15,6 +15,7 @@ import com.example.foodapp.R
 import com.example.foodapp.viewmodels.MainViewModel
 import com.example.foodapp.adapters.RecipesAdapter
 import com.example.foodapp.databinding.FragmentRecipesBinding
+import com.example.foodapp.util.NetworkListener
 import com.example.foodapp.util.NetworkResult
 import com.example.foodapp.util.observeOnce
 import com.example.foodapp.viewmodels.RecipesViewModel
@@ -33,6 +34,7 @@ class RecipesFragment : Fragment() {
     private val TAG = "RecipesFragment"
 
     private val adapter by lazy { RecipesAdapter() }
+    private lateinit var networkListener: NetworkListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +54,21 @@ class RecipesFragment : Fragment() {
         setupRecyclerView()
         readDatabase()
 
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext())
+                .collect { status ->
+                    Log.d("NetworkListener", status.toString())
+                    recipesViewModel.networkStatus = status
+                    recipesViewModel.showNetworkStatus()
+                }
+        }
         binding.recipesFab.setOnClickListener {
-            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            if (recipesViewModel.networkStatus) {
+                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            } else {
+                recipesViewModel.showNetworkStatus()
+            }
         }
 
         return binding.root
@@ -76,8 +91,8 @@ class RecipesFragment : Fragment() {
                     adapter.submitList(database[0].foodRecipe.results)
                     hideShimmerEffect()
                 } else {
-                requestApiData()
-            }
+                    requestApiData()
+                }
             }
         }
     }
