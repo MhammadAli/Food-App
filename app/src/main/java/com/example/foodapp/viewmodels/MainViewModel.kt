@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.Query
 import com.example.foodapp.data.Repository
 import com.example.foodapp.data.database.RecipesEntity
 import com.example.foodapp.models.FoodRecipe
@@ -37,11 +38,17 @@ class MainViewModel @Inject constructor(
 
     /** Retrofit */
     var recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
+    var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
     val recipesList: MutableLiveData<List<Result>> = MutableLiveData()
 
     fun getRecipes(quires: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(quires)
     }
+
+    fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
+        searchRecipesSafeCall(searchQuery)
+    }
+
 
     private suspend fun getRecipesSafeCall(quires: Map<String, String>) {
         if (hasInternetConnection()) {
@@ -58,6 +65,20 @@ class MainViewModel @Inject constructor(
             }
         } else {
             recipesResponse.value = NetworkResult.Error(message = "No internet connection")
+        }
+    }
+
+    private suspend fun searchRecipesSafeCall(searchQuery: Map<String, String>) {
+        if (hasInternetConnection()) {
+            try {
+                val response = repository.remote.searchRecipes(searchQuery)
+                searchedRecipesResponse.value = handleFoodRecipesResponse(response)
+
+            } catch (e: Exception) {
+                searchedRecipesResponse.value = NetworkResult.Error(message = "Recipes not found")
+            }
+        } else {
+            searchedRecipesResponse.value = NetworkResult.Error(message = "No internet connection")
         }
     }
 
