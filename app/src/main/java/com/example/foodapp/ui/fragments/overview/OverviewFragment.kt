@@ -11,6 +11,7 @@ import com.example.foodapp.R
 import com.example.foodapp.databinding.FragmentOverviewBinding
 import com.example.foodapp.databinding.FragmentRecipesBinding
 import com.example.foodapp.models.Result
+import org.jsoup.Jsoup
 
 
 class OverviewFragment : Fragment() {
@@ -31,7 +32,9 @@ class OverviewFragment : Fragment() {
             titleTextView.text = myBundle?.title
             likesTextView.text = myBundle?.aggregateLikes.toString()
             timeTexView.text = myBundle?.readyInMinutes.toString()
-            summaryTextView.text = myBundle?.summary
+            myBundle?.summary.let {
+                summaryTextView.text = Jsoup.parse(it!!).text()
+            }
         }
 
 

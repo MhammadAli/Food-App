@@ -16,6 +16,7 @@ import com.example.foodapp.models.FoodRecipe
 import com.example.foodapp.models.Result
 import com.example.foodapp.ui.fragments.recipes.RecipesFragmentDirections
 import com.todkars.shimmer.ShimmerRecyclerView
+import org.jsoup.Jsoup
 
 class RecipesRowBinding {
 
@@ -83,6 +84,14 @@ class RecipesRowBinding {
                         )
                     }
                 }
+            }
+        }
+
+        @BindingAdapter("parseHtml")
+        @JvmStatic
+        fun parseHtml(textView: TextView, description: String?) {
+            if (description != null) {
+                textView.text = Jsoup.parse(description).text()
             }
         }
     }
