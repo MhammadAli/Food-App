@@ -10,7 +10,7 @@ import androidx.navigation.navArgs
 import com.example.foodapp.R
 import com.example.foodapp.adapters.PagerAdapter
 import com.example.foodapp.databinding.ActivityDetailsBinding
-import com.example.foodapp.ui.fragments.Instructions.InstructionsFragment
+import com.example.foodapp.ui.fragments.instructions.InstructionsFragment
 import com.example.foodapp.ui.fragments.ingredients.IngredientsFragment
 import com.example.foodapp.ui.fragments.overview.OverviewFragment
 import com.example.foodapp.util.Constants.RECIPE_BUNDLE_KEY
