@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Query
 import com.example.foodapp.data.Repository
 import com.example.foodapp.data.database.RecipesEntity
+import com.example.foodapp.models.AnalyzedInstruction
 import com.example.foodapp.models.FoodRecipe
 import com.example.foodapp.models.Result
 import com.example.foodapp.util.NetworkResult
@@ -40,6 +41,7 @@ class MainViewModel @Inject constructor(
     var recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
     var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
     val recipesList: MutableLiveData<List<Result>> = MutableLiveData()
+    val ingredientsList: MutableLiveData<List<AnalyzedInstruction>> = MutableLiveData()
 
     fun getRecipes(quires: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(quires)

@@ -13,7 +13,10 @@ import com.example.foodapp.databinding.ActivityDetailsBinding
 import com.example.foodapp.ui.fragments.Instructions.InstructionsFragment
 import com.example.foodapp.ui.fragments.ingredients.IngredientsFragment
 import com.example.foodapp.ui.fragments.overview.OverviewFragment
+import com.example.foodapp.util.Constants.RECIPE_BUNDLE_KEY
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
 
     val args by navArgs<DetailsActivityArgs>()
@@ -37,7 +40,7 @@ class DetailsActivity : AppCompatActivity() {
         titles.add("Instructions")
 
         val resultBundle = Bundle()
-        resultBundle.putParcelable("recipeBundle", args.result)
+        resultBundle.putParcelable(RECIPE_BUNDLE_KEY, args.result)
 
         val adapter = PagerAdapter(
             resultBundle,

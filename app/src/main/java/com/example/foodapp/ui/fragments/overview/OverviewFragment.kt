@@ -1,6 +1,7 @@
 package com.example.foodapp.ui.fragments.overview
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.example.foodapp.R
 import com.example.foodapp.databinding.FragmentOverviewBinding
 import com.example.foodapp.databinding.FragmentRecipesBinding
 import com.example.foodapp.models.Result
+import com.example.foodapp.util.Constants.RECIPE_BUNDLE_KEY
 import org.jsoup.Jsoup
 
 
@@ -25,7 +27,7 @@ class OverviewFragment : Fragment() {
         binding = FragmentOverviewBinding.inflate(inflater, container, false)
 
         val args = arguments
-        val myBundle: Result? = args?.getParcelable("recipeBundle")
+        val myBundle: Result? = args?.getParcelable(RECIPE_BUNDLE_KEY)
 
         binding.apply {
             mainImageView.load(myBundle?.image)
