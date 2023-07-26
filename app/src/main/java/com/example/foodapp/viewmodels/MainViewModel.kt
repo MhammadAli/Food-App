@@ -9,9 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import com.example.foodapp.data.Repository
-import com.example.foodapp.data.database.RecipesEntity
+import com.example.foodapp.data.database.entities.RecipesEntity
 import com.example.foodapp.models.AnalyzedInstruction
 import com.example.foodapp.models.FoodRecipe
 import com.example.foodapp.models.Result
