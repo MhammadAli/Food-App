@@ -4,23 +4,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
 import com.example.foodapp.R
 import com.example.foodapp.adapters.PagerAdapter
+import com.example.foodapp.data.database.entities.FavoritesEntity
 import com.example.foodapp.databinding.ActivityDetailsBinding
 import com.example.foodapp.ui.fragments.instructions.InstructionsFragment
 import com.example.foodapp.ui.fragments.ingredients.IngredientsFragment
 import com.example.foodapp.ui.fragments.overview.OverviewFragment
 import com.example.foodapp.util.Constants.RECIPE_BUNDLE_KEY
+import com.example.foodapp.viewmodels.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
 
-    val args by navArgs<DetailsActivityArgs>()
+    private val args by navArgs<DetailsActivityArgs>()
+    private val mainViewModel: MainViewModel by viewModels()
     lateinit var binding: ActivityDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +66,35 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
+        when (item.itemId) {
+            android.R.id.home -> finish()
+            R.id.save_to_favorites_menu -> saveToFavorites(item)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun saveToFavorites(item: MenuItem) {
+        val favoritesEntity = FavoritesEntity(
+            id = 0,
+            result = args.result
+
+        )
+        mainViewModel.insertFavoriteRecipe(favoritesEntity)
+        changeMenuItemColor(item, R.color.yellow)
+        showSnackBar("Recipe Saved")
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(
+            binding.detailsLayout,
+            message,
+            Snackbar.LENGTH_SHORT
+        ).setAction("Okay") {}
+            .show()
+    }
+
+    private fun changeMenuItemColor(item: MenuItem, color: Int) {
+        item.icon?.setTint(ContextCompat.getColor(this, color))
     }
 }
