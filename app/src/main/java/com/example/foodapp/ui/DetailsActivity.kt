@@ -2,6 +2,7 @@ package com.example.foodapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -62,7 +63,24 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.details_menu, menu)
+        val menuItem = menu?.findItem(R.id.save_to_favorites_menu)
+        checkSavedRecipes(menuItem!!)
         return true
+    }
+
+    private fun checkSavedRecipes(menuItem: MenuItem) {
+        mainViewModel.readFavoriteRecipes.observe(this){favoritesEntity->
+            try {
+                for (savedRecipe in favoritesEntity){
+                    if (savedRecipe.result.id == args.result.id){
+                        changeMenuItemColor(menuItem,R.color.yellow)
+                    }
+                }
+
+            }catch (e:Exception){
+                Log.e("DetailsActivity", "checkSavedRecipes: ${e.message.toString()}")
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
